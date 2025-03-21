@@ -1,0 +1,45 @@
+# Frontend (React) Specific Ignores
+Frontend/node_modules/
+Frontend/.env
+Frontend/.env.local
+Frontend/.env.development.local
+Frontend/.env.test.local
+Frontend/.env.production.local
+Frontend/npm-debug.log*
+Frontend/yarn-debug.log*
+Frontend/yarn-error.log*
+Frontend/build/
+Frontend/.DS_Store
+Frontend/.eslintcache
+
+# Backend (Django) Specific Ignores
+Backend/*.sqlite3
+Backend/*.pyc
+Backend/*.pyo
+Backend/*.pyd
+Backend/__pycache__/
+Backend/.env
+Backend/env/
+Backend/venv/
+Backend/ENV/
+Backend/.venv/
+Backend/local_settings.py
+Backend/db.sqlite3
+Backend/media/
+Backend/staticfiles/
+Backend/.vscode/
+Backend/.idea/
+Backend/*.log
+Backend/logs/
+Backend/pytest_cache/
+Backend/coverage.xml
+
+# General Development Ignores
+*.log
+*.swp
+*.swo
+.DS_Store
+.idea/
+.vscode/
+.env
+.env.local
