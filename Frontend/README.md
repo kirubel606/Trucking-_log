@@ -1,12 +1,155 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Truck Driver Logbook
 
-Currently, two official plugins are available:
+A full-stack application that helps truck drivers manage their daily logs, trip details, and routes. This project uses Django (with Django REST Framework) as the backend and React as the frontend.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Table of Contents
 
-## Expanding the ESLint configuration
+- [Overview](#overview)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Installation](#installation)
+- [Usage](#usage)
+- [API Endpoints](#api-endpoints)
+- [Sample Data](#sample-data)
+- [License](#license)
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Overview
+
+The Truck Driver Logbook application is designed to assist truck drivers in managing and tracking their trips. Drivers can enter trip details such as pickup and dropoff locations, current location, truck number, shipping document number, and cycle hours. The backend automatically geocodes the addresses to store geographic coordinates. The application provides a dashboard to manage trips, view routes on a map, and generate driver logs (ELD logs).
+
+## Features
+
+- **Trip Management**: Create, read, update, and delete trips.
+- **Geocoding**: Automatically convert pickup, dropoff, and current location addresses to latitude and longitude using OpenStreetMap’s Nominatim API.
+- **Route Display**: View trip routes on a map using Google Maps API.
+- **Driver Logs**: Generate ELD logs with trip details.
+- **Responsive Frontend**: A modern UI built with React, Material UI, and Tailwind CSS.
+- **Confirmation Modals**: Confirm actions such as deleting a trip before executing the operation.
+
+## Tech Stack
+
+- **Backend**:
+  - Django
+  - Django REST Framework
+  - SQLite (for development)
+  - [django-cors-headers](https://github.com/adamchainz/django-cors-headers) for handling CORS
+
+- **Frontend**:
+  - React (created with Vite)
+  - Material UI
+  - Tailwind CSS
+
+- **APIs**:
+  - OpenStreetMap Nominatim API for geocoding addresses
+  - Google Maps API (or similar) for displaying routes on the map
+
+## Installation
+
+### Backend (Django)
+1. **Clone the repository** and navigate to the backend folder:
+   ```bash
+   cd Backend
+   ```
+2. **Create and activate a virtual environment**:
+   ```bash
+   python -m venv venv
+   # On Windows:
+   venv\Scripts\activate
+   # On macOS/Linux:
+   source venv/bin/activate
+   ```
+3. **Install dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+4. **Apply migrations**:
+   ```bash
+   python manage.py makemigrations
+   python manage.py migrate
+   ```
+5. **Run the development server**:
+   ```bash
+   python manage.py runserver
+   ```
+
+### Frontend (React)
+1. **Navigate to the frontend folder**:
+   ```bash
+   cd Frontend
+   ```
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+3. **Run the development server**:
+   ```bash
+   npm run dev
+   ```
+
+## Usage
+
+- **Adding a Trip**:  
+  On the Trips page, click on "Add New Trip" to open a modal form where you can enter trip details (including current, pickup, and dropoff locations, truck number, driver initials, shipping document number, cycle hours, and total miles driven). The form will submit the data to the backend, which geocodes the addresses and saves the trip.
+
+- **Viewing a Route**:  
+  On the View Route page, select an existing trip from a dropdown list to see the corresponding route displayed on the map.
+
+- **Generating Driver Logs**:  
+  On the Logs page, select a trip from the dropdown to generate the ELD log sheet for that trip.
+
+- **Deleting a Trip**:  
+  In the Trips table, use the action column to delete a trip. A confirmation modal will appear before the trip is removed.
+
+## API Endpoints
+
+The backend exposes the following endpoints (via Django REST Framework and a DefaultRouter):
+
+- **Trips**:
+  - `GET /api/trips/` – Retrieve all trips.
+  - `POST /api/trips/submit_trip/` – Custom action to create a trip (geocoding is performed before saving).
+  - `GET /api/trips/{id}/` – Retrieve details of a specific trip.
+  - `PUT /api/trips/{id}/` – Update a specific trip.
+  - `DELETE /api/trips/{id}/` – Delete a specific trip.
+
+- **Log Entries**:
+  - `GET /api/logs/` – Retrieve all log entries.
+  - `POST /api/logs/` – Create a new log entry.
+  - `GET /api/logs/{id}/` – Retrieve details of a specific log entry.
+  - `PUT /api/logs/{id}/` – Update a specific log entry.
+  - `DELETE /api/logs/{id}/` – Delete a specific log entry.
+
+## Sample Data
+
+For testing, you can use the following sample data:
+
+```javascript
+const sampleTrips = [
+  {
+    id: 1,
+    date: "2025-03-10",
+    pickup_location: "New York, NY",
+    dropoff_location: "Los Angeles, CA",
+    truck_number: "A123456",
+    shipping_doc_number: "SD123456789",
+    co_driver: "John Doe",
+    total_miles: 2500,
+    cycle_hours: 10,
+    current_location: "Philadelphia, PA",
+    pickup_lat: 40.7127281,
+    pickup_lng: -74.0060152,
+    dropoff_lat: 34.0536909,
+    dropoff_lng: -118.242766,
+    // current_lat and current_lng would be generated by geocoding "Philadelphia, PA"
+  },
+  // Additional sample trips...
+];
+```
+
+## License
+
+This project is licensed under the MIT License.
+
+---
+
+Feel free to customize this README further to fit your project's specific details and requirements. Enjoy building your Truck Driver Logbook app!
