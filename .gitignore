@@ -39,6 +39,26 @@ Backend/backend/__pycache__/
 Backend/backend/*.py[co]
 Backend/backend/*.mo
 Backend/backend/*.sql
+# Node modules
+node_modules/
+
+# Python bytecode and caches
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+
+# Ignore virtual environments
+venv/
+ENV/
+.env
+
+# Ignore __init__.py files in the Backend folder and nested folders
+Backend/**/__init__.py
+
+# System files
+.DS_Store
+Thumbs.db
 
 
 # General Development Ignores
