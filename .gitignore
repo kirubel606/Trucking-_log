@@ -34,6 +34,13 @@ Backend/logs/
 Backend/pytest_cache/
 Backend/coverage.xml
 
+# Specific nested ignores for backend/backend structure
+Backend/backend/__pycache__/
+Backend/backend/*.py[co]
+Backend/backend/*.mo
+Backend/backend/*.sql
+
+
 # General Development Ignores
 *.log
 *.swp
