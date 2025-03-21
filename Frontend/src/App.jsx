@@ -6,6 +6,7 @@ import ViewRoute from "./pages/ViewRoute";
 import ViewLog from "./pages/ViewLog";
 import { Box } from "@mui/material";
 import Langing from "./components/Langing";
+import ManageLogs from "./pages/ManageLogs";
 
 const drawerWidth = 240; // Sidebar width
 
@@ -23,6 +24,7 @@ const App = () => {
           <Route path="/trips" element={<Trips />} />
           <Route path="/view-route" element={<ViewRoute />} />
           <Route path="/view-log" element={<ViewLog />} />
+          <Route path="/manage-logs" element={<ManageLogs />} />
         </Routes>
       </Box>
     </Router>

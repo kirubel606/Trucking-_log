@@ -34,7 +34,7 @@ const ViewRoute = () => {
         <option value="">Select a trip</option>
         {trips.map((trip) => (
           <option key={trip.id} value={trip.id}>
-            {trip.truckNumber} - {trip.date}
+            {trip.pickup_location} ➝ {trip.dropoff_location},{trip.truckNumber} - {trip.date}
           </option>
         ))}
       </select>
