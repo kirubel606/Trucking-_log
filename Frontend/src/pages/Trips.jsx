@@ -14,7 +14,7 @@ import {
 import TripFormModal from "../components/TripFormModal";
 import ConfirmationModal from "../components/confirmationModal";
 
-const Trips = () => {
+const Trips = ({ darkMode }) => {
   const [trips, setTrips] = useState([]);
   const [open, setOpen] = useState(false);
   const [openConfirmation, setOpenConfirmation] = useState(false);
@@ -85,57 +85,74 @@ const Trips = () => {
   };
 
   return (
-    <div className="mt-16 p-4">
+    <div className={`mt-16 p-4 ${darkMode ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}>
       <h1 className="text-2xl font-bold mb-4">Manage Your Trips Here</h1>
 
-      <Button variant="contained" color="primary" onClick={() => handleOpen()}>
+      <Button 
+        variant="contained" 
+        color={darkMode ? "secondary" : "primary"} 
+        onClick={() => handleOpen()}
+      >
         Add New Trip
       </Button>
 
-      <TableContainer component={Paper} className="mt-4">
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Date</TableCell>
-              <TableCell>Pickup Location</TableCell>
-              <TableCell>Dropoff Location</TableCell>
-              <TableCell>Truck Number</TableCell>
-              <TableCell>Shipping Doc Number</TableCell>
-              <TableCell>Co-Driver</TableCell>
-              <TableCell>Miles Driven</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {trips.map((trip) => (
-              <TableRow key={trip.id}>
-                <TableCell>{trip.date}</TableCell>
-                <TableCell>{trip.pickup_location}</TableCell>
-                <TableCell>{trip.dropoff_location}</TableCell>
-                <TableCell>{trip.truck_number}</TableCell>
-                <TableCell>{trip.shipping_doc_number}</TableCell>
-                <TableCell>{trip.co_driver || "N/A"}</TableCell>
-                <TableCell>{trip.total_miles}</TableCell>
-                <TableCell>
-                  {/* Edit Button */}
-                  <Button
-                    variant="outlined"
-                    color="primary"
-                    onClick={() => handleOpen(trip)}
-                    style={{ marginRight: "10px" }}
-                  >
-                    Edit
-                  </Button>
-                  {/* Delete Button */}
-                  <Button variant="outlined" color="secondary" onClick={() => openDeleteConfirmation(trip)}>
-                    Delete
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <TableContainer 
+  component={Paper} 
+  className={`mt-4 ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'}`}
+>
+  <Table>
+    <TableHead>
+    <TableRow className={darkMode ? 'bg-gray-900' : 'bg-gray-100'}>
+  <TableCell sx={{ color: darkMode ? 'white' : 'black' }}>Date</TableCell>
+  <TableCell sx={{ color: darkMode ? 'white' : 'black' }}>Pickup Location</TableCell>
+  <TableCell sx={{ color: darkMode ? 'white' : 'black' }}>Dropoff Location</TableCell>
+  <TableCell sx={{ color: darkMode ? 'white' : 'black' }}>Truck Number</TableCell>
+  <TableCell sx={{ color: darkMode ? 'white' : 'black' }}>Shipping Doc Number</TableCell>
+  <TableCell sx={{ color: darkMode ? 'white' : 'black' }}>Co-Driver</TableCell>
+  <TableCell sx={{ color: darkMode ? 'white' : 'black' }}>Miles Driven</TableCell>
+  <TableCell sx={{ color: darkMode ? 'white' : 'black' }}>Actions</TableCell>
+</TableRow>
+
+    </TableHead>
+    <TableBody>
+      {trips.map((trip) => (
+        <TableRow 
+          key={trip.id} 
+          className={darkMode ? 'bg-gray-900 hover:bg-gray-700' : 'bg-gray-100 hover:bg-gray-200'}
+          
+        >
+          <TableCell sx={{ color: darkMode ? 'white' : 'black' }}>{trip.date}</TableCell>
+          <TableCell sx={{ color: darkMode ? 'white' : 'black' }}>{trip.pickup_location}</TableCell>
+          <TableCell sx={{ color: darkMode ? 'white' : 'black' }}>{trip.dropoff_location}</TableCell>
+          <TableCell sx={{ color: darkMode ? 'white' : 'black' }}>{trip.truck_number}</TableCell>
+          <TableCell sx={{ color: darkMode ? 'white' : 'black' }}>{trip.shipping_doc_number}</TableCell>
+          <TableCell sx={{ color: darkMode ? 'white' : 'black' }}>{trip.co_driver || "N/A"}</TableCell>
+          <TableCell sx={{ color: darkMode ? 'white' : 'black' }}>{trip.total_miles}</TableCell>
+          <TableCell sx={{ color: darkMode ? 'white' : 'black' }}>
+            {/* Edit Button */}
+            <Button
+              variant={darkMode ? "contained":"outlined"}
+              color={darkMode ? "secondary" : "primary"}
+              onClick={() => handleOpen(trip)}
+              style={{ marginRight: "10px" }}
+            >
+              Edit
+            </Button>
+            {/* Delete Button */}
+            <Button 
+              variant={darkMode ? "contained":"outlined"}
+              color={darkMode ? "error" : "secondary"} 
+              onClick={() => openDeleteConfirmation(trip)}
+            >
+              Delete
+            </Button>
+          </TableCell>
+        </TableRow>
+      ))}
+    </TableBody>
+  </Table>
+</TableContainer>
+
 
       <Modal open={open} onClose={handleClose}>
         <Box
@@ -145,15 +162,13 @@ const Trips = () => {
             left: "50%",
             transform: "translate(-50%, -50%)",
             width: 700,
-            bgcolor: "background.paper",
+            bgcolor: darkMode ? "background.default" : "background.paper",
             boxShadow: 24,
             p: 4,
             borderRadius: 2,
           }}
         >
-
           <TripFormModal onSubmit={saveTrip} tripData={editingTrip} />
-
         </Box>
       </Modal>
 

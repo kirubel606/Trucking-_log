@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import RouteMap from "../components/RouteMap"; // Assuming this is the correct path
 
-const ViewRoute = () => {
+const ViewRoute = ({ darkMode }) => {
   const [trips, setTrips] = useState([]);
   const [selectedTrip, setSelectedTrip] = useState(null);
 
@@ -28,13 +28,13 @@ const ViewRoute = () => {
       <h2 className="text-xl font-semibold mb-4">Select a Trip to View Route</h2>
       <select
         onChange={handleSelectChange}
-        className="p-2 border rounded mb-4"
+        className={`p-2 border rounded mb-4 ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'}`}
         value={selectedTrip ? selectedTrip.id : ""}
       >
         <option value="">Select a trip</option>
         {trips.map((trip) => (
           <option key={trip.id} value={trip.id}>
-            {trip.pickup_location} ➝ {trip.dropoff_location},{trip.truckNumber} - {trip.date}
+            {trip.pickup_location} ➝ {trip.dropoff_location}, {trip.truckNumber} - {trip.date}
           </option>
         ))}
       </select>

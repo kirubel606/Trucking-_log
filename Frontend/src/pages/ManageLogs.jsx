@@ -20,7 +20,7 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from "axios";
 
-const ManageLogs = () => {
+const ManageLogs = ({darkMode}) => {
   const [trips, setTrips] = useState([]);
   const [selectedTrip, setSelectedTrip] = useState("");
   const [logs, setLogs] = useState([]);
@@ -83,11 +83,21 @@ const ManageLogs = () => {
         onChange={(e) => setSelectedTrip(e.target.value)}
         displayEmpty
         fullWidth
-        sx={{ mb: 2 }}
+        className={darkMode ? 'bg-gray-900' : 'bg-gray-100'}
+        sx={{ mb: 2,color: darkMode ? 'white' : '' }}
+        inputProps={{
+          MenuProps: {
+              MenuListProps: {
+                  sx: {
+                      backgroundColor: darkMode ? 'black':''
+                  }
+              }
+          }
+      }}
       >
-        <MenuItem value="" disabled>Select a Trip</MenuItem>
+        <MenuItem className={darkMode ? 'bg-gray-900' : 'bg-gray-100'} sx={{ color: darkMode ? 'white' : 'black' }} value="" disabled>Select a Trip</MenuItem>
         {trips.map((trip) => (
-          <MenuItem key={trip.id} value={trip.id}>
+          <MenuItem  sx={{ color: darkMode ? 'white' : 'black' }} key={trip.id} value={trip.id }>
             {trip.pickup_location} ➝ {trip.dropoff_location} ({trip.truck_number})
           </MenuItem>
         ))}
@@ -97,22 +107,22 @@ const ManageLogs = () => {
       {selectedTrip && logs.length > 0 && (
         <Table>
           <TableHead>
-            <TableRow>
-              <TableCell>Status</TableCell>
-              <TableCell>Location</TableCell>
-              <TableCell>Remarks</TableCell>
-              <TableCell>Timestamp</TableCell>
-              <TableCell>Action</TableCell>
+            <TableRow className={darkMode ? 'bg-gray-900' : 'bg-gray-100'}>
+              <TableCell sx={{ color: darkMode ? 'white' : 'black' }}>Status</TableCell>
+              <TableCell sx={{ color: darkMode ? 'white' : 'black' }}>Location</TableCell>
+              <TableCell sx={{ color: darkMode ? 'white' : 'black' }}>Remarks</TableCell>
+              <TableCell sx={{ color: darkMode ? 'white' : 'black' }}>Timestamp</TableCell>
+              <TableCell sx={{ color: darkMode ? 'white' : 'black' }}>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {logs.map((log) => (
-              <TableRow key={log.id}>
-                <TableCell>{log.status}</TableCell>
-                <TableCell>{log.location}</TableCell>
-                <TableCell>{log.remarks}</TableCell>
-                <TableCell>{new Date(log.timestamp).toLocaleString()}</TableCell>
-                <TableCell>
+              <TableRow key={log.id}  className={darkMode ? 'bg-gray-900 hover:bg-gray-700' : 'bg-gray-100 hover:bg-gray-200'}>
+                <TableCell sx={{ color: darkMode ? 'white' : 'black' }}>{log.status}</TableCell>
+                <TableCell sx={{ color: darkMode ? 'white' : 'black' }}>{log.location}</TableCell>
+                <TableCell sx={{ color: darkMode ? 'white' : 'black' }}>{log.remarks}</TableCell>
+                <TableCell sx={{ color: darkMode ? 'white' : 'black' }}>{new Date(log.timestamp).toLocaleString()}</TableCell>
+                <TableCell sx={{ color: darkMode ? 'white' : 'black' }}>
                   <IconButton
                     color="error"
                     onClick={() => handleDelete(log.id)}
