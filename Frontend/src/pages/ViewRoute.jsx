@@ -5,6 +5,7 @@ import RouteMap from "../components/RouteMap"; // Assuming this is the correct p
 const ViewRoute = ({ darkMode }) => {
   const [trips, setTrips] = useState([]);
   const [selectedTrip, setSelectedTrip] = useState(null);
+  const [TripID, setselectedtripid] = useState(null); // Keep this for the selected trip ID
 
   // Fetch trips from the backend
   useEffect(() => {
@@ -19,8 +20,10 @@ const ViewRoute = ({ darkMode }) => {
   // Handle the trip selection from the dropdown
   const handleSelectChange = (e) => {
     const selectedTripId = parseInt(e.target.value, 10); // Convert to number
+
     const trip = trips.find((trip) => trip.id === selectedTripId);
     setSelectedTrip(trip);
+    setselectedtripid(selectedTripId); // Update the selected trip ID
   };
 
   return (
@@ -39,7 +42,7 @@ const ViewRoute = ({ darkMode }) => {
         ))}
       </select>
 
-      {selectedTrip && <RouteMap routeData={selectedTrip} />}
+      {selectedTrip && <RouteMap routeData={selectedTrip} trip_id={TripID} />}
     </div>
   );
 };

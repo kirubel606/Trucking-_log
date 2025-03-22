@@ -50,6 +50,8 @@ class LogEntry(models.Model):
         choices=[("Driving", "Driving"), ("Resting", "Resting"), ("Fueling", "Fueling"),("On Duty (Not Driving)","On Duty (Not Driving)"),("Off Duty","Off Duty"),("Sleeper Berth","Sleeper Berth")]
     )
     location = models.CharField(max_length=255)
+    latitude = models.FloatField(null=True, blank=True)  # Latitude
+    longitude = models.FloatField(null=True, blank=True)  # Longitude
     remarks = models.TextField(null=True, blank=True)
 
     def __str__(self):
