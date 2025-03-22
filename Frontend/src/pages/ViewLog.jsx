@@ -4,7 +4,7 @@ import LogSheet from "../components/LogSheet";
 const ViewLog = () => {
   const [trips, setTrips] = useState([]);
   const [selectedTrip, setSelectedTrip] = useState(null);
-  const [logEntries, setLogEntries] = useState([]);
+  const [pdf, setPdf] = useState('');
 
   // Fetch trips from the backend
   useEffect(() => {
@@ -20,25 +20,27 @@ const ViewLog = () => {
     fetchTrips();
   }, []);
 
-  // Fetch logs when a trip is selected
-  const handleSelectChange = async (e) => {
-    const selectedTripId = parseInt(e.target.value, 10);
-    const trip = trips.find((trip) => trip.id === selectedTripId);
-    setSelectedTrip(trip);
+// Fetch logs when a trip is selected
+const handleSelectChange = async (e) => {
+  const selectedTripId = parseInt(e.target.value, 10);
+  const trip = trips.find((trip) => trip.id === selectedTripId);
+  setSelectedTrip(trip);
 
-    if (trip) {
-      try {
-        const response = await fetch(
-          `http://localhost:8000/api/logs/?trip_id=${trip.id}`
-        );
-        const logs = await response.json();
-        setLogEntries(logs);
-      } catch (error) {
-        console.error("Error fetching logs:", error);
-        setLogEntries([]);
-      }
+  if (trip) {
+    try {
+      const response = await fetch(
+        `http://localhost:8000/api/generate-log/?trip_id=${trip.id}`
+      );
+      const blob = await response.blob();
+      const pdfUrl = URL.createObjectURL(blob);
+      setPdf(pdfUrl);
+    } catch (error) {
+      console.error("Error fetching PDF:", error);
+      setPdf('');
     }
-  };
+  }
+};
+
 
   return (
     <div className="p-6">
@@ -56,7 +58,7 @@ const ViewLog = () => {
         ))}
       </select>
 
-      {selectedTrip && <LogSheet tripData={selectedTrip} logEntries={logEntries} />}
+      {selectedTrip && <LogSheet  pdf={pdf} />}
     </div>
   );
 };

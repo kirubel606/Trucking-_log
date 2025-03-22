@@ -15,7 +15,9 @@ import {
   DialogContent,
   DialogActions,
   TextField,
+  IconButton,
 } from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
 import axios from "axios";
 
 const ManageLogs = () => {
@@ -61,6 +63,16 @@ const ManageLogs = () => {
       .catch((err) => console.error(err));
   };
 
+  // Delete log entry handler
+  const handleDelete = (logId) => {
+    axios.delete(`http://localhost:8000/api/logs/${logId}/`)
+      .then(() => {
+        // Filter out the deleted log from the list
+        setLogs(logs.filter((log) => log.id !== logId));
+      })
+      .catch((err) => console.error(err));
+  };
+
   return (
     <Container>
       <Typography variant="h4" gutterBottom>Manage Log Entries</Typography>
@@ -90,6 +102,7 @@ const ManageLogs = () => {
               <TableCell>Location</TableCell>
               <TableCell>Remarks</TableCell>
               <TableCell>Timestamp</TableCell>
+              <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -99,6 +112,14 @@ const ManageLogs = () => {
                 <TableCell>{log.location}</TableCell>
                 <TableCell>{log.remarks}</TableCell>
                 <TableCell>{new Date(log.timestamp).toLocaleString()}</TableCell>
+                <TableCell>
+                  <IconButton
+                    color="error"
+                    onClick={() => handleDelete(log.id)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -126,6 +147,9 @@ const ManageLogs = () => {
             <MenuItem value="Driving">Driving</MenuItem>
             <MenuItem value="Resting">Resting</MenuItem>
             <MenuItem value="Fueling">Fueling</MenuItem>
+            <MenuItem value="On Duty (Not Driving)">On Duty (Not Driving)</MenuItem>
+            <MenuItem value="Off Duty">Off Duty</MenuItem>
+            <MenuItem value="Sleeper Berth">Sleeper Berth</MenuItem>
           </Select>
           <TextField
             name="location"

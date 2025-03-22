@@ -12,67 +12,70 @@ import {
   Box,
 } from "@mui/material";
 import TripFormModal from "../components/TripFormModal";
-import ConfirmationModal from "../components/confirmationModal"; // Import the new confirmation modal
+import ConfirmationModal from "../components/confirmationModal";
 
 const Trips = () => {
   const [trips, setTrips] = useState([]);
   const [open, setOpen] = useState(false);
-  const [openConfirmation, setOpenConfirmation] = useState(false); // State to control the confirmation modal
-  const [tripToDelete, setTripToDelete] = useState(null); // Store the trip that needs to be deleted
+  const [openConfirmation, setOpenConfirmation] = useState(false);
+  const [tripToDelete, setTripToDelete] = useState(null);
+  const [editingTrip, setEditingTrip] = useState(null); // Store trip for editing
 
   useEffect(() => {
     const fetchTrips = async () => {
       try {
-        const response = await fetch("http://localhost:8000/api/trips/", {
-          method: 'GET', // Ensure it's a GET request
-          headers: {
-            'Content-Type': 'application/json', // Inform the server that you're expecting JSON
-          },
-        });
-        
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        
+        const response = await fetch("http://localhost:8000/api/trips/");
+        if (!response.ok) throw new Error("Network response was not ok");
         const data = await response.json();
-        setTrips(data); // Set the fetched trips in state
+        setTrips(data);
       } catch (error) {
         console.error("Error fetching trips:", error);
       }
     };
-  
-    fetchTrips(); // Call the fetchTrips function
-  }, []); // Empty dependency array means this runs once when the component mounts
-  
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+    fetchTrips();
+  }, []);
 
-  const addTrip = (newTrip) => {
-    setTrips([...trips, newTrip]);
+  // Open modal for creating or editing a trip
+  const handleOpen = (trip = null) => {
+    setEditingTrip(trip); // Set trip to edit, or null for new trip
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+    setEditingTrip(null); // Clear editing trip when modal closes
+  };
+
+  // Add or update trip in state
+  const saveTrip = (trip) => {
+    if (editingTrip) {
+      // Update existing trip
+      setTrips(trips.map((t) => (t.id === trip.id ? trip : t)));
+    } else {
+      // Add new trip
+      setTrips([...trips, trip]);
+    }
     handleClose();
   };
 
   const openDeleteConfirmation = (trip) => {
-    setTripToDelete(trip); // Store the trip to delete
-    setOpenConfirmation(true); // Show the confirmation modal
+    setTripToDelete(trip);
+    setOpenConfirmation(true);
   };
 
   const closeDeleteConfirmation = () => {
-    setOpenConfirmation(false); // Close the confirmation modal
-    setTripToDelete(null); // Clear the trip to delete
+    setOpenConfirmation(false);
+    setTripToDelete(null);
   };
 
   const deleteTrip = async () => {
     try {
-      // Delete the trip from the backend (optional, depends on your API)
       const response = await fetch(`http://localhost:8000/api/trips/${tripToDelete.id}/`, {
-        method: 'DELETE', // Ensure it's a DELETE request
+        method: "DELETE",
       });
 
       if (response.ok) {
-        // If successful, remove the trip from the state
         setTrips(trips.filter((trip) => trip.id !== tripToDelete.id));
-        closeDeleteConfirmation(); // Close the confirmation modal
+        closeDeleteConfirmation();
       } else {
         console.error("Failed to delete the trip");
       }
@@ -85,7 +88,7 @@ const Trips = () => {
     <div className="mt-16 p-4">
       <h1 className="text-2xl font-bold mb-4">Manage Your Trips Here</h1>
 
-      <Button variant="contained" color="primary" onClick={handleOpen}>
+      <Button variant="contained" color="primary" onClick={() => handleOpen()}>
         Add New Trip
       </Button>
 
@@ -100,7 +103,7 @@ const Trips = () => {
               <TableCell>Shipping Doc Number</TableCell>
               <TableCell>Co-Driver</TableCell>
               <TableCell>Miles Driven</TableCell>
-              <TableCell>Actions</TableCell> {/* Add Action column */}
+              <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -114,12 +117,17 @@ const Trips = () => {
                 <TableCell>{trip.co_driver || "N/A"}</TableCell>
                 <TableCell>{trip.total_miles}</TableCell>
                 <TableCell>
-                  {/* Action buttons */}
+                  {/* Edit Button */}
                   <Button
                     variant="outlined"
-                    color="secondary"
-                    onClick={() => openDeleteConfirmation(trip)} // Open confirmation modal
+                    color="primary"
+                    onClick={() => handleOpen(trip)}
+                    style={{ marginRight: "10px" }}
                   >
+                    Edit
+                  </Button>
+                  {/* Delete Button */}
+                  <Button variant="outlined" color="secondary" onClick={() => openDeleteConfirmation(trip)}>
                     Delete
                   </Button>
                 </TableCell>
@@ -143,17 +151,13 @@ const Trips = () => {
             borderRadius: 2,
           }}
         >
-          <TripFormModal onSubmit={addTrip} />
+
+          <TripFormModal onSubmit={saveTrip} tripData={editingTrip} />
+
         </Box>
       </Modal>
 
-      {/* Confirmation Modal */}
-      <ConfirmationModal
-        open={openConfirmation}
-        onClose={closeDeleteConfirmation}
-        onConfirm={deleteTrip} // Call deleteTrip if confirmed
-        message="Are you sure you want to delete this trip?"
-      />
+      <ConfirmationModal open={openConfirmation} onClose={closeDeleteConfirmation} onConfirm={deleteTrip} message="Are you sure you want to delete this trip?" />
     </div>
   );
 };

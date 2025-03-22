@@ -1,49 +1,73 @@
-// src/components/TripForm.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { TextField, Button } from "@mui/material";
 
-const TripFormModal = ({ onSubmit }) => {
-  const [pickupLocation, setPickupLocation] = useState("");
-  const [dropoffLocation, setDropoffLocation] = useState("");
+const TripFormModal = ({ onSubmit, tripData }) => {
+  // State to hold form values
+  const [pickup_location, setPickupLocation] = useState("");
+  const [dropoff_location, setDropoffLocation] = useState("");
   const [cycle_hours, setCurrentCycleHours] = useState("");
-  const [truckNumber, setTruckNumber] = useState("");
-  const [shippingDocNumber, setShippingDocNumber] = useState("");
-  const [coDriver, setCoDriver] = useState("");
+  const [truck_number, setTruckNumber] = useState("");
+  const [shipping_doc_number, setShippingDocNumber] = useState("");
+  const [co_driver, setCoDriver] = useState("");
+  const [carrier_name, setcarrier_name] = useState("");
+  const [office_address, setoffice_address] = useState("");
   const [total_miles, setMilesDriven] = useState("");
   const [date, setDate] = useState("");
-  const [currentLocation, setCurrentLocation] = useState(""); // For current location
-  const [driver_initials, setDriverInitials] = useState(""); // For driver initials
+  const [current_location, setCurrentLocation] = useState("");
+  const [driver_initials, setDriverInitials] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  // Populate form fields with existing data if tripData is provided
+  useEffect(() => {
+    if (tripData) {
+      setPickupLocation(tripData.pickup_location || "");
+      setDropoffLocation(tripData.dropoff_location || "");
+      setCurrentCycleHours(tripData.cycle_hours || "");
+      setTruckNumber(tripData.truck_number || "");
+      setShippingDocNumber(tripData.shipping_doc_number || "");
+      setCoDriver(tripData.co_driver || "");
+      setcarrier_name(tripData.carrier_name || "");
+      setoffice_address(tripData.office_address || "");
+      setMilesDriven(tripData.total_miles || "");
+      setDate(tripData.date || "");
+      setCurrentLocation(tripData.current_location || "");
+      setDriverInitials(tripData.driver_initials || "");
+    }
+  }, [tripData]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Set defaults for numeric fields if empty
-    const cycleHoursValue = cycle_hours ? parseFloat(cycle_hours) : 0;
-    const milesDrivenValue = total_miles ? parseFloat(total_miles) : 0;
+    const cycleHoursValue = cycle_hours ? parseInt(cycle_hours) : 0;
+    const milesDrivenValue = total_miles ? parseInt(total_miles) : 0;
 
-    // Gather form data, ensuring no nulls are sent
     const formData = {
-      currentLocation,
-      pickupLocation,
-      dropoffLocation,
+      current_location,
+      pickup_location,
+      dropoff_location,
       cycle_hours: cycleHoursValue,
-      truckNumber,
-      shippingDocNumber,
-      coDriver,
+      truck_number,
+      shipping_doc_number,
+      co_driver,
+      carrier_name,
+      office_address,
       total_miles: milesDrivenValue,
       date,
-      driver_initials,  // Include driver initials
+      driver_initials,
     };
 
     try {
       setLoading(true);
       setError(null);
 
-      // Send POST request to the backend
-      const response = await fetch("http://localhost:8000/api/trips/submit_trip/", {
-        method: "POST",
+      const method = tripData ? "PUT" : "POST"; // Use PUT for editing, POST for creating
+      const url = tripData
+        ? `http://localhost:8000/api/trips/${tripData.id}/` // Assuming the trip has an id
+        : "http://localhost:8000/api/trips/submit_trip/";
+
+      const response = await fetch(url, {
+        method: method,
         headers: {
           "Content-Type": "application/json",
         },
@@ -51,21 +75,21 @@ const TripFormModal = ({ onSubmit }) => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to create trip log");
+        throw new Error("Failed to save trip log");
       }
 
       const tripResponse = await response.json();
 
-      // Pass the response data to the parent component
       onSubmit(tripResponse);
 
-      // Reset the form fields
       setPickupLocation("");
       setDropoffLocation("");
       setCurrentCycleHours("");
       setTruckNumber("");
       setShippingDocNumber("");
       setCoDriver("");
+      setcarrier_name("");
+      setoffice_address("");
       setMilesDriven("");
       setDate("");
       setCurrentLocation("");
@@ -92,7 +116,7 @@ const TripFormModal = ({ onSubmit }) => {
         <label className="block text-sm font-medium text-gray-700">Pickup Location</label>
         <input
           type="text"
-          value={pickupLocation}
+          value={pickup_location}
           onChange={(e) => setPickupLocation(e.target.value)}
           className="w-full p-2 border border-gray-300 rounded-md"
         />
@@ -101,7 +125,7 @@ const TripFormModal = ({ onSubmit }) => {
         <label className="block text-sm font-medium text-gray-700">Dropoff Location</label>
         <input
           type="text"
-          value={dropoffLocation}
+          value={dropoff_location}
           onChange={(e) => setDropoffLocation(e.target.value)}
           className="w-full p-2 border border-gray-300 rounded-md"
         />
@@ -110,7 +134,7 @@ const TripFormModal = ({ onSubmit }) => {
         <label className="block text-sm font-medium text-gray-700">Current Location</label>
         <input
           type="text"
-          value={currentLocation}
+          value={current_location}
           onChange={(e) => setCurrentLocation(e.target.value)}
           className="w-full p-2 border border-gray-300 rounded-md"
         />
@@ -128,7 +152,7 @@ const TripFormModal = ({ onSubmit }) => {
         <label className="block text-sm font-medium text-gray-700">Truck Number</label>
         <input
           type="text"
-          value={truckNumber}
+          value={truck_number}
           onChange={(e) => setTruckNumber(e.target.value)}
           className="w-full p-2 border border-gray-300 rounded-md"
         />
@@ -137,7 +161,7 @@ const TripFormModal = ({ onSubmit }) => {
         <label className="block text-sm font-medium text-gray-700">Shipping Document Number</label>
         <input
           type="text"
-          value={shippingDocNumber}
+          value={shipping_doc_number}
           onChange={(e) => setShippingDocNumber(e.target.value)}
           className="w-full p-2 border border-gray-300 rounded-md"
         />
@@ -152,10 +176,28 @@ const TripFormModal = ({ onSubmit }) => {
         />
       </div>
       <div>
+        <label className="block text-sm font-medium text-gray-700">carrier_name</label>
+        <input
+          type="text"
+          value={carrier_name}
+          onChange={(e) => setcarrier_name(e.target.value)}
+          className="w-full p-2 border border-gray-300 rounded-md"
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">office_address</label>
+        <input
+          type="text"
+          value={office_address}
+          onChange={(e) => setoffice_address(e.target.value)}
+          className="w-full p-2 border border-gray-300 rounded-md"
+        />
+      </div>
+      <div>
         <label className="block text-sm font-medium text-gray-700">Co-Driver (if applicable)</label>
         <input
           type="text"
-          value={coDriver}
+          value={co_driver}
           onChange={(e) => setCoDriver(e.target.value)}
           className="w-full p-2 border border-gray-300 rounded-md"
         />
@@ -177,7 +219,7 @@ const TripFormModal = ({ onSubmit }) => {
         className="mt-4 w-full py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700"
         disabled={loading}
       >
-        {loading ? "Generating Log Sheet..." : "Generate Log Sheet"}
+        {loading ? "Generating Log Sheet..." : tripData ? "Edit Log Sheet" : "Generate Log Sheet"}
       </button>
     </form>
   );

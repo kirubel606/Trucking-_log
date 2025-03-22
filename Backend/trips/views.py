@@ -39,10 +39,10 @@ class TripViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['post'])
     def submit_trip(self, request):
         # Extract form data
-        current_location = request.data.get('currentLocation')
-        pickup_location = request.data.get('pickupLocation')
-        dropoff_location = request.data.get('dropoffLocation')
-        current_cycle_used = request.data.get('currentCycleUsed')
+        current_location = request.data.get('current_location')
+        pickup_location = request.data.get('pickup_location')
+        dropoff_location = request.data.get('dropoff_location')
+        current_cycle_used = request.data.get('cycle_hours')
 
         # Ensure that all addresses are provided
         if not current_location or not pickup_location or not dropoff_location:
@@ -65,15 +65,17 @@ class TripViewSet(viewsets.ModelViewSet):
 
         # Create a new Trip entry in the database with the geocoded data
         trip_data = {
-            'truck_number': request.data.get('truckNumber'),
-            'driver_initials': request.data.get('initials'),
-            'co_driver': request.data.get('coDriver'),
+            'truck_number': request.data.get('truck_number'),
+            'driver_initials': request.data.get('driver_initials'),
+            'co_driver': request.data.get('co_driver'),
+            'carrier_name': request.data.get('carrier_name'),
+            'office_address': request.data.get('office_address'),
             'current_location': current_location,
             'pickup_location': pickup_location,
             'dropoff_location': dropoff_location,
-            'shipping_doc_number': request.data.get('shippingDocNumber'),
+            'shipping_doc_number': request.data.get('shipping_doc_number'),
             'date': request.data.get('date'),
-            'total_miles': request.data.get('totalMiles'),
+            'total_miles': request.data.get('total_miles'),
             'cycle_hours': current_cycle_used,
             'current_lat': current_lat,
             'current_lng': current_lng,

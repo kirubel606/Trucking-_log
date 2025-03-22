@@ -6,6 +6,9 @@ class Trip(models.Model):
     truck_number = models.CharField(max_length=255, unique=True,null=True, blank=True)
     driver_initials = models.CharField(max_length=10,null=True, blank=True)
     co_driver = models.CharField(max_length=255, null=True, blank=True)
+    carrier_name = models.CharField(max_length=255, null=True, blank=True)
+    office_address = models.CharField(max_length=255, null=True, blank=True)
+
     # Current location of the truck
     current_location = models.CharField(max_length=255)  # Add this field
     pickup_location = models.CharField(max_length=255)
@@ -44,7 +47,7 @@ class LogEntry(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     status = models.CharField(
         max_length=50, 
-        choices=[("Driving", "Driving"), ("Resting", "Resting"), ("Fueling", "Fueling")]
+        choices=[("Driving", "Driving"), ("Resting", "Resting"), ("Fueling", "Fueling"),("On Duty (Not Driving)","On Duty (Not Driving)"),("Off Duty","Off Duty"),("Sleeper Berth","Sleeper Berth")]
     )
     location = models.CharField(max_length=255)
     remarks = models.TextField(null=True, blank=True)
