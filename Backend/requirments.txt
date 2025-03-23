@@ -31,4 +31,8 @@ graphene-django>=3.2.0  # GraphQL integration
 black>=24.2.0  # Code formatter
 isort>=5.13.2  # Import sorting
 
+requests>=2.31.0
+reportlab>=4.0.0
+
+
 # If you're using SQLite only, remove `psycopg2-binary`
