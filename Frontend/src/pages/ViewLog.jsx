@@ -5,12 +5,13 @@ const ViewLog = ({ darkMode }) => {
   const [trips, setTrips] = useState([]);
   const [selectedTrip, setSelectedTrip] = useState(null);
   const [pdf, setPdf] = useState('');
+  const Base_URL = import.meta.env.VITE_BACKEND_URL;
 
   // Fetch trips from the backend
   useEffect(() => {
     const fetchTrips = async () => {
       try {
-        const response = await fetch("http://localhost:8000/api/trips/");
+        const response = await fetch(`${Base_URL}api/trips/`);
         const data = await response.json();
         setTrips(data);
       } catch (error) {
@@ -29,7 +30,7 @@ const ViewLog = ({ darkMode }) => {
     if (trip) {
       try {
         const response = await fetch(
-          `http://localhost:8000/api/generate-log/?trip_id=${trip.id}`
+          `${Base_URL}api/generate-log/?trip_id=${trip.id}`
         );
         const blob = await response.blob();
         const pdfUrl = URL.createObjectURL(blob);

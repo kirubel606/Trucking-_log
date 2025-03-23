@@ -6,11 +6,12 @@ const ViewRoute = ({ darkMode }) => {
   const [trips, setTrips] = useState([]);
   const [selectedTrip, setSelectedTrip] = useState(null);
   const [TripID, setselectedtripid] = useState(null); // Keep this for the selected trip ID
+  const Base_URL = import.meta.env.VITE_BACKEND_URL;
 
   // Fetch trips from the backend
   useEffect(() => {
     const fetchTrips = async () => {
-      const response = await fetch("http://localhost:8000/api/trips/");
+      const response = await fetch(`${Base_URL}api/trips/`);
       const data = await response.json();
       setTrips(data);
     };

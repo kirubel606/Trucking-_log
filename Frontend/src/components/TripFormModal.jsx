@@ -17,6 +17,7 @@ const TripFormModal = ({ onSubmit, tripData }) => {
   const [driver_initials, setDriverInitials] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const Base_URL = import.meta.env.VITE_BACKEND_URL;
 
   // Populate form fields with existing data if tripData is provided
   useEffect(() => {
@@ -63,8 +64,8 @@ const TripFormModal = ({ onSubmit, tripData }) => {
 
       const method = tripData ? "PUT" : "POST"; // Use PUT for editing, POST for creating
       const url = tripData
-        ? `http://localhost:8000/api/trips/${tripData.id}/` // Assuming the trip has an id
-        : "http://localhost:8000/api/trips/submit_trip/";
+        ? `${Base_URL}api/trips/${tripData.id}/` // Assuming the trip has an id
+        : `${Base_URL}api/trips/submit_trip/`;
 
       const response = await fetch(url, {
         method: method,

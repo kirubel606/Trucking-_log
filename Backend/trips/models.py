@@ -47,7 +47,7 @@ class LogEntry(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     status = models.CharField(
         max_length=50, 
-        choices=[("Driving", "Driving"), ("Resting", "Resting"), ("Fueling", "Fueling"),("On Duty (Not Driving)","On Duty (Not Driving)"),("Off Duty","Off Duty"),("Sleeper Berth","Sleeper Berth")]
+        choices=[("Driving", "Driving"),("On Duty (Not Driving)","On Duty (Not Driving)"),("Off Duty","Off Duty"),("Sleeper Berth","Sleeper Berth")]
     )
     location = models.CharField(max_length=255)
     latitude = models.FloatField(null=True, blank=True)  # Latitude

@@ -20,11 +20,12 @@ const Trips = ({ darkMode }) => {
   const [openConfirmation, setOpenConfirmation] = useState(false);
   const [tripToDelete, setTripToDelete] = useState(null);
   const [editingTrip, setEditingTrip] = useState(null); // Store trip for editing
+  const Base_URL = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     const fetchTrips = async () => {
       try {
-        const response = await fetch("http://localhost:8000/api/trips/");
+        const response = await fetch(`${Base_URL}api/trips/`);
         if (!response.ok) throw new Error("Network response was not ok");
         const data = await response.json();
         setTrips(data);
@@ -69,7 +70,7 @@ const Trips = ({ darkMode }) => {
 
   const deleteTrip = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/api/trips/${tripToDelete.id}/`, {
+      const response = await fetch(`${Base_URL}api/trips/${tripToDelete.id}/`, {
         method: "DELETE",
       });
 
